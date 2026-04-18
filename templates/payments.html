@@ -1,40 +1,47 @@
 {% extends "base.html" %}
-{% block title %}Payments · Car Rental{% endblock %}
+{% block title %}Payments · DriveNow{% endblock %}
+{% block topbar_title %}Payments{% endblock %}
+
 {% block content %}
-<h1>Payments</h1>
 
 <section class="grid two">
-  <article class="card">
-    <h2>Record payment</h2>
+  <article class="card anim-card">
+    <h2>Record Payment</h2>
     <form method="post" class="form">
-      <label>Booking
+      <label>
+        Booking
         <select name="booking_id" required>
-          <option value="">Select…</option>
+          <option value="">Select booking…</option>
           {% for b in bookings %}
-            <option value="{{ b.booking_id }}">#{{ b.booking_id }} — customer {{ b.customer_id }} — {{ b.total_rent }} ({{ b.status }})</option>
+            <option value="{{ b.booking_id }}">#{{ b.booking_id }} — Customer {{ b.customer_id }} — ₹{{ b.total_rent }} ({{ b.status }})</option>
           {% endfor %}
         </select>
       </label>
-      <label>Amount <input name="amount_paid" type="number" step="0.01" min="0" required></label>
-      <label>Method
+      <label>
+        Amount (₹)
+        <input name="amount_paid" type="number" step="0.01" min="0" required placeholder="0.00">
+      </label>
+      <label>
+        Payment Method
         <select name="payment_method">
           <option>UPI</option>
           <option>cash</option>
           <option>card</option>
         </select>
       </label>
-      <label>Status
+      <label>
+        Payment Status
         <select name="payment_status">
           <option>paid</option>
           <option>pending</option>
         </select>
       </label>
-      <button type="submit" class="btn primary">Save payment</button>
+      <button type="submit" class="btn primary">Save Payment</button>
     </form>
   </article>
 
-  <article class="card">
-    <h2>Ledger</h2>
+  <article class="card anim-card">
+    <h2>Payment Ledger</h2>
     <div class="table-wrap">
       <table class="data">
         <thead>
@@ -42,7 +49,7 @@
             <th>ID</th>
             <th>Booking</th>
             <th>Customer</th>
-            <th>Amount</th>
+            <th>Amount (₹)</th>
             <th>Method</th>
             <th>Status</th>
           </tr>
@@ -51,14 +58,14 @@
           {% for p in payments %}
           <tr>
             <td>{{ p.payment_id }}</td>
-            <td>{{ p.booking_id }}</td>
+            <td>#{{ p.booking_id }}</td>
             <td>{{ p.customer_name }}</td>
-            <td>{{ p.amount_paid }}</td>
+            <td>₹{{ p.amount_paid }}</td>
             <td>{{ p.payment_method }}</td>
-            <td>{{ p.payment_status }}</td>
+            <td><span class="pill pill-{{ p.payment_status }}">{{ p.payment_status }}</span></td>
           </tr>
           {% else %}
-          <tr><td colspan="6" class="muted">No payments yet.</td></tr>
+          <tr><td colspan="6" class="muted" style="text-align:center;padding:32px;">No payments recorded yet.</td></tr>
           {% endfor %}
         </tbody>
       </table>

@@ -3,42 +3,117 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Car Rental Management System — manage fleet, customers, bookings, payments and servicing from one dashboard.">
   <title>{% block title %}Car Rental{% endblock %}</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
 </head>
 <body>
-  <header class="site-header">
-    <div class="brand">
-      <a href="{{ url_for('index') }}">Drive<span>Now</span></a>
+
+{% if request.endpoint == 'index' %}
+<div id="loader-overlay">
+  <div class="loader-container">
+    <div class="loader-frame">
+      <svg viewBox="0 0 100 100" fill="none" aria-hidden="true">
+        <g id="loader-group">
+          <path id="loader-path" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" opacity="0.1"></path>
+        </g>
+      </svg>
     </div>
-    <button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu">☰</button>
-    <nav class="nav" id="mainNav">
-      <a href="{{ url_for('index') }}">Dashboard</a>
-      <a href="{{ url_for('customers') }}">Customers</a>
-      <a href="{{ url_for('cars') }}">Cars</a>
-      <a href="{{ url_for('bookings') }}">Bookings</a>
-      <a href="{{ url_for('payments') }}">Payments</a>
-      <a href="{{ url_for('servicing') }}">Servicing</a>
+  </div>
+</div>
+<div id="app-shell" class="start-hidden">
+{% else %}
+<div id="app-shell">
+{% endif %}
+<div class="app-layout">
+
+  <!-- ===== Sidebar Overlay (mobile) ===== -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- ===== Sidebar ===== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <a href="{{ url_for('index') }}">
+        <span class="brand-icon">DN</span>
+        Drive<span>Now</span>
+      </a>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-label">Menu</div>
+      <a href="{{ url_for('index') }}" class="{{ 'active' if request.endpoint == 'index' }}">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Dashboard
+      </a>
+      <a href="{{ url_for('customers') }}" class="{{ 'active' if request.endpoint == 'customers' }}">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        Customers
+      </a>
+      <a href="{{ url_for('cars') }}" class="{{ 'active' if request.endpoint == 'cars' }}">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="2"/><polygon points="16 8 20 5 20 16 16 13 16 8"/></svg>
+        Cars
+      </a>
+
+      <div class="nav-label">Operations</div>
+      <a href="{{ url_for('bookings') }}" class="{{ 'active' if request.endpoint == 'bookings' }}">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Bookings
+      </a>
+      <a href="{{ url_for('payments') }}" class="{{ 'active' if request.endpoint == 'payments' }}">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        Payments
+      </a>
+      <a href="{{ url_for('servicing') }}" class="{{ 'active' if request.endpoint == 'servicing' }}">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        Servicing
+      </a>
     </nav>
-  </header>
 
-  <main class="container">
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        <div class="flash-stack">
-          {% for category, message in messages %}
-            <div class="flash flash-{{ category }}">{{ message }}</div>
-          {% endfor %}
-        </div>
-      {% endif %}
-    {% endwith %}
-    {% block content %}{% endblock %}
-  </main>
+    <div class="sidebar-footer">
+      <span id="healthDot" class="health-dot" title="Checking API…"></span>
+      <span>System Status</span>
+    </div>
+  </aside>
 
-  <footer class="site-footer">
-    <span>Flask + MySQL · Car rental demo</span>
-    <span id="healthDot" class="health-dot" title="Checking API…"></span>
-  </footer>
-  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  <!-- ===== Main Content ===== -->
+  <div class="main-area">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <span class="topbar-title">{% block topbar_title %}DriveNow{% endblock %}</span>
+      </div>
+      <div class="topbar-right">
+        {% block topbar_stats %}{% endblock %}
+      </div>
+    </header>
+
+    <main class="container">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="flash-stack">
+            {% for category, message in messages %}
+              <div class="flash flash-{{ category }}">{{ message }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+      <span>Flask + MySQL · Car Rental System</span>
+      <span>© 2026</span>
+    </footer>
+  </div>
+
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>

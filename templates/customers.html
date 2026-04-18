@@ -1,22 +1,39 @@
 {% extends "base.html" %}
-{% block title %}Customers · Car Rental{% endblock %}
+{% block title %}Customers · DriveNow{% endblock %}
+{% block topbar_title %}Customers{% endblock %}
+
 {% block content %}
-<h1>Customers</h1>
 
 <section class="grid two">
-  <article class="card">
-    <h2>Add customer</h2>
+  <article class="card anim-card">
+    <h2>Add Customer</h2>
     <form method="post" class="form">
-      <label>Name <input name="customer_name" required maxlength="100"></label>
-      <label>Phone <input name="phone" maxlength="15"></label>
-      <label>Address <textarea name="address" rows="2"></textarea></label>
-      <label>Driving license <input name="driving_license" maxlength="50"></label>
-      <label>UPI ID <input name="upi_id" maxlength="100"></label>
-      <button type="submit" class="btn primary">Save</button>
+      <label>
+        Full Name
+        <input name="customer_name" required maxlength="100" placeholder="Enter customer name">
+      </label>
+      <label>
+        Phone
+        <input name="phone" maxlength="15" placeholder="e.g. 9876543210">
+      </label>
+      <label>
+        Address
+        <textarea name="address" rows="2" placeholder="Full address"></textarea>
+      </label>
+      <label>
+        Driving License
+        <input name="driving_license" maxlength="50" placeholder="License number">
+      </label>
+      <label>
+        UPI ID
+        <input name="upi_id" maxlength="100" placeholder="name@upi">
+      </label>
+      <button type="submit" class="btn primary">Add Customer</button>
     </form>
   </article>
-  <article class="card">
-    <h2>Directory</h2>
+
+  <article class="card anim-card">
+    <h2>Customer Directory</h2>
     <div class="table-wrap">
       <table class="data">
         <thead>
@@ -38,7 +55,7 @@
             <td>{{ c.created_at | dt }}</td>
           </tr>
           {% else %}
-          <tr><td colspan="5" class="muted">No customers yet.</td></tr>
+          <tr><td colspan="5" class="muted" style="text-align:center;padding:32px;">No customers yet. Add one using the form.</td></tr>
           {% endfor %}
         </tbody>
       </table>

@@ -1,0 +1,222 @@
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
+:root {
+  /* --- Palette (dark, neutral) --- */
+  --bg:           #101216;
+  --bg-subtle:    #151820;
+  --surface:      #1a1e27;
+  --surface-alt:  #20242f;
+  --border:       #282d3a;
+  --border-light: #31374a;
+  --text:         #e4e8f1;
+  --text-secondary:#a0a9be;
+  --muted:        #6b7490;
+
+  /* Accents */
+  --accent:       #5b8df9;
+  --accent-hover: #789ef7;
+  --accent-dim:   #3a6ad4;
+  --accent-bg:    rgba(91,141,249,0.08);
+
+  /* Semantic */
+  --success:      #34d399;
+  --success-bg:   rgba(52,211,153,0.08);
+  --success-border:rgba(52,211,153,0.20);
+  --warning:      #fbbf24;
+  --warning-bg:   rgba(251,191,36,0.08);
+  --warning-border:rgba(251,191,36,0.20);
+  --danger:       #f87171;
+  --danger-bg:    rgba(248,113,113,0.08);
+  --danger-border:rgba(248,113,113,0.20);
+
+  /* Spacing (8px grid) */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+  --sp-10: 40px;
+  --sp-12: 48px;
+  --sp-16: 64px;
+
+  /* Radius */
+  --radius-sm: 6px;
+  --radius:    8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-pill: 999px;
+
+  /* Typography */
+  --font: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --fs-xs:  0.75rem;   /* 12px */
+  --fs-sm:  0.8125rem; /* 13px */
+  --fs-base:0.875rem;  /* 14px */
+  --fs-md:  1rem;      /* 16px */
+  --fs-lg:  1.125rem;  /* 18px */
+  --fs-xl:  1.375rem;  /* 22px */
+  --fs-2xl: 1.75rem;   /* 28px */
+
+  /* Sidebar */
+  --sidebar-w: 240px;
+
+  /* Transition */
+  --ease: cubic-bezier(0.25,0.46,0.45,0.94);
+  --dur-fast: 150ms;
+  --dur:      250ms;
+  --dur-slow: 400ms;
+}
+
+/* ============================================================
+   RESET / BASE
+   ============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: 16px; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+body {
+  min-height: 100vh;
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  font-size: var(--fs-base);
+  display: flex;
+}
+
+a       { color: var(--accent); text-decoration: none; transition: color var(--dur-fast) var(--ease); }
+a:hover { color: var(--accent-hover); }
+
+img, svg { vertical-align: middle; }
+
+/* ============================================================
+   PAGE HEADER
+   ============================================================ */
+.page-header {
+  margin-bottom: var(--sp-8);
+}
+
+.page-header h1 {
+  font-size: var(--fs-2xl);
+  font-weight: 700;
+  margin: 0 0 var(--sp-1);
+  letter-spacing: -0.02em;
+}
+
+.page-header .lede {
+  color: var(--text-secondary);
+  font-size: var(--fs-base);
+  margin: 0;
+}
+
+/* ============================================================
+   FLASH / ALERT MESSAGES
+   ============================================================ */
+.flash-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-6);
+}
+
+.flash {
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--radius);
+  border-left: 3px solid var(--border);
+  font-size: var(--fs-sm);
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.flash::before {
+  font-size: var(--fs-md);
+  flex-shrink: 0;
+}
+
+.flash-success {
+  border-left-color: var(--success);
+  background: var(--success-bg);
+}
+.flash-success::before { content: '✓'; color: var(--success); }
+
+.flash-error {
+  border-left-color: var(--danger);
+  background: var(--danger-bg);
+}
+.flash-error::before { content: '!'; color: var(--danger); font-weight: 700; }
+
+/* ============================================================
+   ANIME.JS animation-ready helper classes
+   ============================================================ */
+.anim-fade-in {
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+.anim-card {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+/* ============================================================
+   LOADER OVERLAY
+   ============================================================ */
+#loader-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #050505; /* Provided loader bg */
+  color: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 500ms ease;
+  pointer-events: all;
+  font-family: var(--font);
+}
+
+#loader-overlay.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#app-shell {
+  opacity: 1;
+  pointer-events: all;
+  transition: opacity 500ms ease 100ms;
+}
+
+#app-shell.start-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#app-shell.start-hidden.fade-in {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.loader-container {
+  display: grid;
+  gap: var(--sp-5);
+  justify-items: center;
+}
+
+.loader-frame {
+  width: min(50vmin, 200px);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+}
+
+.loader-frame svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}

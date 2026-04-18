@@ -1,10 +1,11 @@
 {% extends "base.html" %}
-{% block title %}Servicing · Car Rental{% endblock %}
-{% block content %}
-<h1>Servicing</h1>
-<p class="lede">Rows are created by the database trigger after every 10 completed bookings for a car. You can mark service done to return the car to the fleet.</p>
+{% block title %}Servicing · DriveNow{% endblock %}
+{% block topbar_title %}Servicing{% endblock %}
 
-<section class="card">
+{% block content %}
+
+<section class="card anim-card">
+  <h2>Service Records</h2>
   <div class="table-wrap">
     <table class="data">
       <thead>
@@ -13,9 +14,9 @@
           <th>Car</th>
           <th>Date</th>
           <th>Type</th>
-          <th>Service status</th>
-          <th>Car status</th>
-          <th></th>
+          <th>Service Status</th>
+          <th>Car Status</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody>
@@ -31,7 +32,7 @@
             {% if s.status == 'pending' %}
             <form method="post" class="inline">
               <input type="hidden" name="service_id" value="{{ s.service_id }}">
-              <button type="submit" class="btn small primary">Mark done</button>
+              <button type="submit" class="btn small primary">Mark Done</button>
             </form>
             {% else %}
             <span class="muted">—</span>
@@ -39,7 +40,7 @@
           </td>
         </tr>
         {% else %}
-        <tr><td colspan="7" class="muted">No service records yet.</td></tr>
+        <tr><td colspan="7" class="muted" style="text-align:center;padding:32px;">No service records yet. They appear automatically after 10 completed bookings per car.</td></tr>
         {% endfor %}
       </tbody>
     </table>
