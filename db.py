@@ -30,7 +30,7 @@ def ensure_database_exists():
     conn = pymysql.connect(
         host=cfg["host"],
         port=cfg["port"],
-        user=cfg["root"],
+        user=cfg["user"],
         password=cfg["password"],
         cursorclass=DictCursor,
         autocommit=True,

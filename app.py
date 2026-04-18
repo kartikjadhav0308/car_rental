@@ -157,7 +157,20 @@ def bookings():
                     if not car:
                         flash("Car not found.", "error")
                         return redirect(url_for("bookings"))
-                    if car["status"] != "available":
+                    if car["status"] == "maintenance":
+                        flash("Car is in maintenance and cannot be booked.", "error")
+                        return redirect(url_for("bookings"))
+                    cur.execute(
+                        """
+                        SELECT COUNT(*) AS c
+                        FROM bookings
+                        WHERE car_id = %s AND status = 'booked'
+                        FOR UPDATE
+                        """,
+                        (carid,),
+                    )
+                    active_count = cur.fetchone()["c"]
+                    if active_count > 0:
                         flash("Car is not available for booking.", "error")
                         return redirect(url_for("bookings"))
                     total = (decimal.Decimal(str(car["rent_per_hour"])) * hours_val).quantize(
@@ -187,7 +200,7 @@ def bookings():
             try:
                 with db_cursor() as (_, cur):
                     cur.execute(
-                        "SELECT status FROM bookings WHERE booking_id = %s FOR UPDATE",
+                        "SELECT car_id, status FROM bookings WHERE booking_id = %s FOR UPDATE",
                         (bid,),
                     )
                     b = cur.fetchone()
@@ -200,6 +213,16 @@ def bookings():
                     cur.execute(
                         "UPDATE bookings SET status = 'completed' WHERE booking_id = %s",
                         (bid,),
+                    )
+                    # Fallback if DB trigger is missing: release car when booking completes.
+                    # If trigger is present and sends it to maintenance, this won't override it.
+                    cur.execute(
+                        """
+                        UPDATE cars
+                        SET status = 'available'
+                        WHERE car_id = %s AND status = 'booked'
+                        """,
+                        (b["car_id"],),
                     )
                 flash("Booking marked completed (trigger may schedule servicing).", "success")
             except Exception as exc:
@@ -239,6 +262,17 @@ def bookings():
 
     try:
         with db_cursor() as (_, cur):
+            # Self-heal stale states: if a car is marked booked but has no active
+            # booked booking, mark it available so it appears in the booking list.
+            cur.execute(
+                """
+                UPDATE cars c
+                LEFT JOIN bookings b
+                  ON b.car_id = c.car_id AND b.status = 'booked'
+                SET c.status = 'available'
+                WHERE c.status = 'booked' AND b.booking_id IS NULL
+                """
+            )
             cur.execute(
                 """
                 SELECT b.*, c.customer_name, k.car_name, k.car_numberplate
@@ -254,7 +288,14 @@ def bookings():
             )
             cust_opts = cur.fetchall()
             cur.execute(
-                "SELECT car_id, car_name, car_numberplate, rent_per_hour FROM cars WHERE status = 'available' ORDER BY car_name"
+                """
+                SELECT c.car_id, c.car_name, c.car_numberplate, c.rent_per_hour
+                FROM cars c
+                LEFT JOIN bookings b
+                  ON b.car_id = c.car_id AND b.status = 'booked'
+                WHERE c.status != 'maintenance' AND b.booking_id IS NULL
+                ORDER BY c.car_name
+                """
             )
             car_opts = cur.fetchall()
     except Exception as exc:
