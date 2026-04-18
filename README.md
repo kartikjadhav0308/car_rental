@@ -17,7 +17,7 @@ A full-stack web application for managing car rentals, built with **Flask** and 
 | **Auto-Servicing Trigger** | MySQL trigger automatically schedules servicing after every 10 completed bookings per car |
 | **Health Check API** | `GET /api/health` endpoint for monitoring |
 
----
+
 
 ## 🛠️ Tech Stack
 
