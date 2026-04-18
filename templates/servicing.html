@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Servicing · Car Rental{% endblock %}
+{% block content %}
+<h1>Servicing</h1>
+<p class="lede">Rows are created by the database trigger after every 10 completed bookings for a car. You can mark service done to return the car to the fleet.</p>
+
+<section class="card">
+  <div class="table-wrap">
+    <table class="data">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Car</th>
+          <th>Date</th>
+          <th>Type</th>
+          <th>Service status</th>
+          <th>Car status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in servicing %}
+        <tr>
+          <td>{{ s.service_id }}</td>
+          <td>{{ s.car_name }} <span class="muted">({{ s.car_numberplate }})</span></td>
+          <td>{{ s.service_date | dt }}</td>
+          <td>{{ s.service_type }}</td>
+          <td><span class="pill pill-{{ s.status }}">{{ s.status }}</span></td>
+          <td><span class="pill pill-{{ s.car_status }}">{{ s.car_status }}</span></td>
+          <td>
+            {% if s.status == 'pending' %}
+            <form method="post" class="inline">
+              <input type="hidden" name="service_id" value="{{ s.service_id }}">
+              <button type="submit" class="btn small primary">Mark done</button>
+            </form>
+            {% else %}
+            <span class="muted">—</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="7" class="muted">No service records yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

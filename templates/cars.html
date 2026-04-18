@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Cars · Car Rental{% endblock %}
+{% block content %}
+<h1>Fleet</h1>
+
+<section class="grid two">
+  <article class="card">
+    <h2>Add car</h2>
+    <form method="post" class="form">
+      <label>Number plate <input name="car_numberplate" required maxlength="20" placeholder="MH12 AB 1234"></label>
+      <label>Car name <input name="car_name" required maxlength="100"></label>
+      <label>Vehicle type <input name="vehicle_type" maxlength="50" placeholder="SUV / Sedan"></label>
+      <label>Rent / hour <input name="rent_per_hour" type="number" step="0.01" min="0" required></label>
+      <button type="submit" class="btn primary">Save</button>
+    </form>
+  </article>
+  <article class="card">
+    <h2>Inventory</h2>
+    <div class="table-wrap">
+      <table class="data">
+        <thead>
+          <tr>
+            <th>Plate</th>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Rent/hr</th>
+            <th>Status</th>
+            <th>Bookings #</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for k in cars %}
+          <tr>
+            <td>{{ k.car_numberplate }}</td>
+            <td>{{ k.car_name }}</td>
+            <td>{{ k.vehicle_type or '—' }}</td>
+            <td>{{ k.rent_per_hour }}</td>
+            <td><span class="pill pill-{{ k.status }}">{{ k.status }}</span></td>
+            <td>{{ k.booking_count }}</td>
+          </tr>
+          {% else %}
+          <tr><td colspan="6" class="muted">No cars yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </article>
+</section>
+{% endblock %}

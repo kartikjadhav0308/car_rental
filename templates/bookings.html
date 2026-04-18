@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}Bookings · Car Rental{% endblock %}
+{% block content %}
+<h1>Bookings</h1>
+
+<section class="grid two">
+  <article class="card">
+    <h2>New booking</h2>
+    <form method="post" class="form">
+      <input type="hidden" name="action" value="create">
+      <label>Customer
+        <select name="customer_id" required>
+          <option value="">Select…</option>
+          {% for c in customers %}
+            <option value="{{ c.customer_id }}">{{ c.customer_name }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <label>Car (available only)
+        <select name="car_id" required>
+          <option value="">Select…</option>
+          {% for k in cars %}
+            <option value="{{ k.car_id }}">{{ k.car_name }} — {{ k.car_numberplate }} ({{ k.rent_per_hour }}/hr)</option>
+          {% endfor %}
+        </select>
+      </label>
+      <label>Hours <input name="hours" type="number" step="0.5" min="0.5" required></label>
+      <button type="submit" class="btn primary">Book</button>
+    </form>
+    {% if not customers or not cars %}
+      <p class="muted small">Add customers and at least one <em>available</em> car first.</p>
+    {% endif %}
+  </article>
+
+  <article class="card">
+    <h2>All bookings</h2>
+    <div class="table-wrap">
+      <table class="data compact">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Customer</th>
+            <th>Car</th>
+            <th>Hours</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for b in bookings %}
+          <tr>
+            <td>{{ b.booking_id }}</td>
+            <td>{{ b.customer_name }}</td>
+            <td>{{ b.car_name }} <span class="muted">({{ b.car_numberplate }})</span></td>
+            <td>{{ b.hours }}</td>
+            <td>{{ b.total_rent }}</td>
+            <td><span class="pill pill-{{ b.status }}">{{ b.status }}</span></td>
+            <td class="actions">
+              {% if b.status == 'booked' %}
+              <form method="post" class="inline">
+                <input type="hidden" name="action" value="complete">
+                <input type="hidden" name="booking_id" value="{{ b.booking_id }}">
+                <button type="submit" class="btn small">Complete</button>
+              </form>
+              <form method="post" class="inline">
+                <input type="hidden" name="action" value="cancel">
+                <input type="hidden" name="booking_id" value="{{ b.booking_id }}">
+                <button type="submit" class="btn small ghost">Cancel</button>
+              </form>
+              {% else %}
+              <span class="muted">—</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="7" class="muted">No bookings yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </article>
+</section>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · Car Rental{% endblock %}
+{% block content %}
+<section class="hero">
+  <h1>Rental control center</h1>
+  <p class="lede">Manage customers, fleet, bookings, payments, and servicing from one place.</p>
+</section>
+
+<section class="grid stats">
+  <article class="card stat">
+    <h2>Customers</h2>
+    <p class="stat-value">{{ customers if customers is not none else '—' }}</p>
+  </article>
+  <article class="card stat">
+    <h2>Cars in fleet</h2>
+    <p class="stat-value">{{ cars if cars is not none else '—' }}</p>
+  </article>
+  <article class="card stat">
+    <h2>Active bookings</h2>
+    <p class="stat-value">{{ active_bookings if active_bookings is not none else '—' }}</p>
+  </article>
+  <article class="card stat">
+    <h2>Pending service</h2>
+    <p class="stat-value">{{ pending_service if pending_service is not none else '—' }}</p>
+  </article>
+</section>
+
+<section class="card">
+  <h2>Quick start</h2>
+  <ol class="steps">
+    <li>Add a <a href="{{ url_for('customers') }}">customer</a> and register <a href="{{ url_for('cars') }}">cars</a>.</li>
+    <li>Create a <a href="{{ url_for('bookings') }}">booking</a> for an available vehicle.</li>
+    <li>Record <a href="{{ url_for('payments') }}">payments</a>; mark bookings completed to exercise the DB trigger (10 completions → auto servicing).</li>
+  </ol>
+</section>
+{% endblock %}
